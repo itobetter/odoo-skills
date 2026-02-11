@@ -46,3 +46,29 @@ You MUST register the CSV file in the `__manifest__.py` under the `data` key.
 ## Tips
 *   Access rights are loaded when the module is installed or updated.
 *   Always define access rights for new models to prevent security warnings/errors.
+
+## Record Rules (ir.rule)
+Record rules restrict access to **specific records** based on a domain (row-level security).
+*   **File Location**: `security/ir_rule.xml` (or inside `data/` files).
+*   **Structure**:
+    ```xml
+    <record id="rule_estate_personal" model="ir.rule">
+        <field name="name">Personal Properties Only</field>
+        <field name="model_id" ref="model_estate_property"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    ```
+*   `domain_force`: The filter domain. `user` variable is available.
+*   `groups`: If empty, applies to Everyone (Global Rule). Global rules are intersected (AND), Group rules are unioned (OR).
+
+## Field Access
+Restrict access to specific fields in the Python model definition.
+```python
+secret_code = fields.Char(groups="base.group_system")
+```
+*   Users without the group will not see the field in views and cannot read/write via ORM.

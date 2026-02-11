@@ -20,6 +20,20 @@ Before defining a field, answer these questions to determine the correct attribu
 ## 2. Defining a Model
 Models inherit from `models.Model`, `models.TransientModel` (temporary), or `models.AbstractModel` (mixins).
 
+### Model Types
+1.  **Model (`models.Model`)**:
+    *   Regular database-persisted models.
+    *   Most common type.
+2.  **TransientModel (`models.TransientModel`)**:
+    *   Temporary records, periodically cleaned up by a scheduled action.
+    *   Used for **Wizards** (pop-ups to ask user input).
+    *   No access rights required (usually).
+    *   Example: `class EstateOfferWizard(models.TransientModel): ...`
+3.  **AbstractModel (`models.AbstractModel`)**:
+    *   No database table created.
+    *   Used as a "Mixin" or Interface to be inherited by other models.
+    *   Example: `mail.thread` (Chatter), `image.mixin`.
+
 ```python
 from odoo import api, fields, models
 

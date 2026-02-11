@@ -22,6 +22,61 @@ Views are records in the `ir.ui.view` model, defined in XML files.
 </record>
 ```
 
+## 4. Smart Buttons
+Stat buttons (Smart Buttons) are placed inside a `div` with class `oe_button_box` at the top of the form sheet.
+```xml
+<sheet>
+    <div class="oe_button_box" name="button_box">
+        <button name="action_view_offers" type="object" class="oe_stat_button" icon="fa-money">
+            <field name="offer_count" string="Offers" widget="statinfo"/>
+        </button>
+    </div>
+    <!-- ... Rest of the sheet ... -->
+</sheet>
+```
+*   `type="object"`: Calls a Python method `action_view_offers`.
+*   `type="action"`: Triggers a Window Action (needs `name="%(action_xml_id)d"`).
+*   `widget="statinfo"`: Formats the count nicely.
+
+## 5. Search View (`ir.ui.view`)
+Defines the search bar behavior (Search, Filter, Group By).
+```xml
+<search string="Search Property">
+    <field name="name"/>
+    <field name="postcode"/>
+    <filter string="New" name="filter_new" domain="[('state', '=', 'new')]"/>
+    <group expand="1" string="Group By">
+        <filter string="Postcode" name="group_postcode" context="{'group_by':'postcode'}"/>
+    </group>
+</search>
+```
+
+## 6. Graph and Pivot Views
+Used for reporting.
+```xml
+<!-- Graph View -->
+<record id="view_estate_property_graph" model="ir.ui.view">
+    <field name="model">estate.property</field>
+    <field name="arch" type="xml">
+        <graph string="Property Prices" type="bar">
+            <field name="property_type_id"/>
+            <field name="selling_price" type="measure"/>
+        </graph>
+    </field>
+</record>
+
+<!-- Pivot View -->
+<record id="view_estate_property_pivot" model="ir.ui.view">
+    <field name="model">estate.property</field>
+    <field name="arch" type="xml">
+        <pivot string="Property Analysis">
+            <field name="property_type_id" type="row"/>
+            <field name="expected_price" type="measure"/>
+        </pivot>
+    </field>
+</record>
+```
+
 ## 2. List View (`<list>`)
 Displays records in a table.
 *   Root element: `<list>` (previously `<tree>`).
